@@ -3,7 +3,7 @@ node_modules/
 npm-debug.log
 yarn-error.log
 
-path-to-store-data
+sessions
 
 # Logs
 logs/

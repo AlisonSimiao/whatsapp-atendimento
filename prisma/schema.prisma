@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ERole {
+  ADMIN
+  USER
+
+  @@map("roles")
+}
+
+model User {
+  id              Int      @id() @default(autoincrement())
+  nome            String
+  sobrenome       String
+  email           String   @unique()
+  senha           String
+  telefone        String?
+  cpf             String
+  dataNascimento  String?  @map("data_nascimento")
+  role            ERole    @default(USER)
+  Empresa         empresa  @relation(fields: [empresaId], references: [id])
+  empresaId       Int
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @updatedAt() @map("updated_at")
+
+  @@map("users")
+}
+
+enum EEmpresaStatus {
+  ATIVO
+  INATIVO
+  BLOQUEADO
+
+  @@map("empresa_status")
+}
+
+model empresa {
+  id        Int             @id() @default(autoincrement())
+  codigo    String?         @unique
+  nome      String?
+  cnpj      String?
+  Session   session         @relation(fields: [sessionId], references: [id])
+  status    EEmpresaStatus? @default(ATIVO)
+  sessionId Int
+  online    Boolean         @default(false)
+  qrCode    String?         @map("qr_code")
+  plano     plano?          @relation(fields: [planoId], references: [id])
+  planoId   Int?            @default(1)
+  ativo_em  DateTime?       @map("ativo_em")
+  ativo_ate DateTime?       @map("ativo_ate")
+  updatedAt DateTime        @default(now()) @updatedAt() @map("updated_at")
+  createdAt DateTime        @default(now()) @map("created_at")
+  User      User[]
+
+  @@map("empresas")
+}
+
+model plano {
+  id        Int            @id() @default(autoincrement())
+  nome      String
+  max       Int            @map("maximo_usuarios")
+  valor     Int
+  status    EEmpresaStatus @default(ATIVO)
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @default(now()) @updatedAt() @map("updated_at")
+  empresa   empresa[]
+
+  @@map("planos")
+}
+
+model session {
+  id        Int       @id() @default(autoincrement())
+  data      Json      @default("{}")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt() @map("updated_at")
+  empresa   empresa[]
+
+  @@map("sessions")
+}

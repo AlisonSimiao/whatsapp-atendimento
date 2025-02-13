@@ -1,0 +1,310 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Documentacao AdCoin - OpenAPI 3.0",
+    "description": "documentação da api AdCoin",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "0.0.4"
+  },
+  "servers": [
+    {
+      "url": "https://adcoin.onrender.com",
+      "description": "PROD"
+    },
+    {
+      "url": "http://localhost:8080",
+      "description": "LOCAL"
+    }
+  ],
+  "tags": [
+    {
+      "name": "auth",
+      "description": "rotas publicas de autorização"
+    },
+    {
+      "name": "usuario",
+      "description": "rotas privadas de usuario"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "login",
+        "description": "rota para se logar no sistema.",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "não autorizado"
+          },
+          "422": {
+            "description": "erro de unprocess"
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "cria usuario",
+        "description": "rota para criação de usuario",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/users/confirmEmail": {
+      "get": {
+        "tags": [
+          "usuario"
+        ],
+        "summary": "envia um email de confirmação ao usuario",
+        "description": "rota para criação de usuario",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "email enviado"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/users": {
+      "patch": {
+        "tags": [
+          "usuario"
+        ],
+        "summary": "atualiza usuario",
+        "description": "rota para **atualização** de usuario",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "usuario atualizada"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successful operation"
+          },
+          "409": {
+            "description": "conflito com relação a email ou cpf duplicados"
+          },
+          "422": {
+            "description": "nao foi possivel processar os dados"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "senha": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "senha"
+        ]
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "UserCreate": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "sobrenome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "senha": {
+            "type": "string"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "16988745623"
+          },
+          "cpf": {
+            "type": "string",
+            "maxLength": 11
+          },
+          "dataNascimento": {
+            "type": "string",
+            "description": "ANO-MES-DIA"
+          }
+        },
+        "required": [
+          "nome",
+          "email",
+          "cpf",
+          "senha"
+        ]
+      },
+      "UserUpdate": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "sobrenome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "senha": {
+            "type": "string"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "16988745623"
+          },
+          "cpf": {
+            "type": "string",
+            "maxLength": 11
+          },
+          "dataNascimento": {
+            "type": "string",
+            "description": "ANO-MES-DIA"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "sobrenome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "emailConfirmado": {
+            "type": "boolean"
+          },
+          "telefone": {
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string"
+          },
+          "dataNascimento": {
+            "type": "string"
+          },
+          "saldo": {
+            "type": "integer"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "ADMIN",
+              "USER"
+            ],
+            "example": "USER"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
+}
