@@ -3,9 +3,13 @@ import prisma from "../../database";
 import { NotFundError } from "../../erros";
 import { empresa } from "@prisma/client";
 import { encryptPassword } from "../crypto";
+import { Interface } from "node:readline";
 
+interface IConection {
+    [key: string]: Client
+}
 export class WhatsappService {
-    static conections: Record<string, Client> = {};
+    public static connections: IConection = {};
 
 
     async createConnection(empresa: empresa) {
@@ -37,7 +41,7 @@ export class WhatsappService {
         client.once('ready', async () => {
             await prisma.empresa.update({
                 where: {
-                    codigo: c
+                    codigo: clientId
                 },
                 data: {
                     online: true

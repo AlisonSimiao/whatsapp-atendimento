@@ -1,3 +1,4 @@
+import { AlternativeValidationError } from "express-validator"
 import { EError } from "../typing/error"
 
 export class NotFundError extends Error {
@@ -22,9 +23,9 @@ export class ConflictError extends Error {
 }
 
 export class UnprocessableEntityError extends Error {
-    constructor(message: string | object[]) {
+    constructor(message: any[]) {
         super('')
-        this.message = message
+        this.message = JSON.stringify(message)
         this.name = EError.UNPROCESSABLE_ENTITY
     }
 }

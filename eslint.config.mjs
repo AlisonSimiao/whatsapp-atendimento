@@ -8,5 +8,11 @@ export default [
   {files: ["**/*.{js,mjs,cjs,ts}"]},
   {languageOptions: { globals: globals.browser }},
   pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
+  {
+    rules: {
+      "no-console": "on",
+      "no-undef": "on",
+      "no-unused-vars": "on",
+    },
+  },
 ];

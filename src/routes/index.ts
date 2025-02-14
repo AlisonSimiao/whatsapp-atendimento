@@ -26,7 +26,7 @@ publicRoute.get('/', (req: Request, res: Response) => {
     res.send({
         name: pg.name,
         version: pg.version,
-        conections: Object.keys(WhatsappService.conections).length
+        conections: Object.keys(WhatsappService.connections).length
     })
 })
 

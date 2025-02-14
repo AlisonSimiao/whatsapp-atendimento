@@ -20,7 +20,7 @@ export class EmailService implements IEmailService {
             },
           });
           this.htmlEmail = {
-            confirm: ({nome, linkConfirm}: TConfirm): string => {
+            confirm: (body: TConfirm): string => {
                 return  `
                 <!DOCTYPE html>
                 <html lang="en">
@@ -125,10 +125,10 @@ export class EmailService implements IEmailService {
                     </tr>
                     <tr>
                     <td class="email-body">
-                        <p>Olá, ${nome}</p>
+                        <p>Olá, ${body.nome}</p>
                         <p>Obrigado por se cadastrar! Clique no botão abaixo para confirmar seu email.</p>
                         <p>
-                        <a href="${linkConfirm}" target="_blank">Confirmar Email</a>
+                        <a href="${body.linkConfirm}" target="_blank">Confirmar Email</a>
                         </p>
                         <p>Se você não solicitou este email, pode ignorá-lo com segurança.</p>
                     </td>
@@ -156,7 +156,7 @@ export class EmailService implements IEmailService {
             from: process.env.EMAIL_USER,     // Remetente
             to,     // Destinatário
             subject: '[Mensagem automatica] - Confirmação de email',     // Assunto
-            html: this.htmlEmail.confirm(body.nome, link),
+            html: this.htmlEmail.confirm({nome: body.nome, linkConfirm: link}),
           };
 
         return this.mailer.sendMail(emailParams).catch((err) => {
