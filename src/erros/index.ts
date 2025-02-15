@@ -23,9 +23,9 @@ export class ConflictError extends Error {
 }
 
 export class UnprocessableEntityError extends Error {
-    constructor(message: any[]) {
+    constructor(message: any) {
         super('')
-        this.message = JSON.stringify(message)
+        this.message = message
         this.name = EError.UNPROCESSABLE_ENTITY
     }
 }

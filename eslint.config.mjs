@@ -13,6 +13,7 @@ export default [
       "no-console": "on",
       "no-undef": "on",
       "no-unused-vars": "on",
+      "any-rule": "off",
     },
   },
 ];
